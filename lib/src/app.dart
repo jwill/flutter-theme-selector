@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_theme_selector/src/utils.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
 import 'sample_feature/sample_item_list_view.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
+    TextTheme textTheme = createTextTheme(context, settingsController.bodyLabelFont, settingsController.displayHeadlineFont);
     return ListenableBuilder(
       listenable: settingsController,
       builder: (BuildContext context, Widget? child) {
@@ -56,8 +58,8 @@ class MyApp extends StatelessWidget {
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
-          theme: ThemeData(),
-          darkTheme: ThemeData.dark(),
+          theme: ThemeData(textTheme: textTheme, colorScheme: lightScheme()),
+          darkTheme: ThemeData(textTheme: textTheme.apply(bodyColor: darkScheme().onSurface), colorScheme: darkScheme()),
           themeMode: settingsController.themeMode,
 
           // Define a function to handle named routes in order to support

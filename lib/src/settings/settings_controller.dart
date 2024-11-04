@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
 import 'settings_service.dart';
 
 /// A class that many Widgets can interact with to read user settings, update
@@ -17,14 +18,25 @@ class SettingsController with ChangeNotifier {
   // also persisting the changes with the SettingsService.
   late ThemeMode _themeMode;
 
+  late double _contrast;
+
+  late String _displayHeadlineFont;
+  late String _bodyLabelFont;
+
   // Allow Widgets to read the user's preferred ThemeMode.
   ThemeMode get themeMode => _themeMode;
+  String get displayHeadlineFont => _displayHeadlineFont;
+  String get bodyLabelFont => _bodyLabelFont;
 
   /// Load the user's settings from the SettingsService. It may load from a
   /// local database or the internet. The controller only knows it can load the
   /// settings from the service.
   Future<void> loadSettings() async {
     _themeMode = await _settingsService.themeMode();
+    print(_themeMode);
+    _contrast = await _settingsService.contrast();
+    _displayHeadlineFont = await _settingsService.displayHeadlineFont();
+    _bodyLabelFont = await _settingsService.bodyLabelFont();
 
     // Important! Inform listeners a change has occurred.
     notifyListeners();
@@ -46,5 +58,21 @@ class SettingsController with ChangeNotifier {
     // Persist the changes to a local database or the internet using the
     // SettingService.
     await _settingsService.updateThemeMode(newThemeMode);
+  }
+
+  Future<void> updateFonts(String key, String? newValue) async {
+    if (newValue == null) return;
+
+    print(key);
+    if (key == DISPLAY_FONT) {
+      _displayHeadlineFont = newValue;
+      await _settingsService.updateDisplayFont(newValue);
+    }
+    if (key == BODY_FONT) {
+      _bodyLabelFont = newValue;
+      await _settingsService.updateBodyFont(newValue);
+    }
+
+    notifyListeners();
   }
 }
