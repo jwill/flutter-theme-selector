@@ -1,0 +1,6 @@
+{
+  "appTitle": "flutter_theme_selector",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
