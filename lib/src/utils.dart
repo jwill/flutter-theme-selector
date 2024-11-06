@@ -18,12 +18,43 @@ TextTheme createTextTheme(BuildContext context, String bodyFontString,
     labelMedium: bodyTextTheme.labelMedium,
     labelSmall: bodyTextTheme.labelSmall,
   );
+
   return textTheme;
+}
+extension ColorUtils on Color {
+  String toHex() {
+    final rr = (r * 255.0).round().toRadixString(16).padLeft(2, '0');
+    final gg = (g * 255.0).round().toRadixString(16).padLeft(2, '0');
+    final bb = (b * 255.0).round().toRadixString(16).padLeft(2, '0');
+    return '#$rr$gg$bb';
+  }
+
+  Color onColor() {
+    return computeLuminance() > 0.5 ? Colors.black : Colors.white;
+  }
+}
+
+extension WidgetUtils on Widget {
+  Widget opacity(double value) {
+    return Opacity(
+      opacity: value,
+      child: this,
+    );
+  }
+
+  Widget padding(EdgeInsetsGeometry value) {
+    return Padding(
+      padding: value,
+      child: this,
+    );
+  }
 }
 
 Brightness getBrightnessForThemeMode(ThemeMode mode) {
   return mode == ThemeMode.light ? Brightness.light : Brightness.dark;
 }
+
+
 
 ColorScheme lightScheme() {
 return const ColorScheme(

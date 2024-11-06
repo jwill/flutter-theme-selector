@@ -48,7 +48,8 @@ class SettingsService {
   Future <String> displayHeadlineFont() async {
     String? displayFont = await prefs.getString(DISPLAY_FONT);
     if (displayFont == null) {
-      return 'Abril Fatface';
+      await prefs.setString(DISPLAY_FONT, "Noto Sans");
+      return 'Noto Sans';
     }
     else {
       return displayFont;
@@ -58,11 +59,44 @@ class SettingsService {
   Future <String> bodyLabelFont() async {
     String? bodyFont = await prefs.getString(BODY_FONT);
     if (bodyFont == null) {
-      return 'Abril Fatface';
+      await prefs.setString(BODY_FONT, "Noto Sans");
+      return 'Noto Sans';
     }
     else {
       return bodyFont;
     }
+  }
+
+  Future<double> fontSizeFactor() async {
+    double? fontSize = await prefs.getDouble(FONT_SIZE_FACTOR);
+    if (fontSize == null) {
+      return 1.0;
+    } else {
+      return fontSize;
+    }
+  }
+
+
+  Future <ColorSeed> colorSeed() async {
+    Color? seed = (await prefs.getInt(COLOR_SEED))?.toColor();
+    Color? secondarySeed = (await prefs.getInt(COLOR_SECONDARY_SEED)).toColor();
+    Color? tertiarySeed = (await prefs.getInt(COLOR_TERTIARY_SEED)).toColor();
+    Color? neutralSeed = (await prefs.getInt(COLOR_NEUTRAL_SEED)).toColor();
+    Color? neutralVariantSeed = (await prefs.getInt(COLOR_NV_SEED)).toColor();
+    Color? errorSeed = (await prefs.getInt(COLOR_ERROR_SEED)).toColor();
+
+    if (seed == null) {
+      seed = Color(0x6750A4FF);
+    }
+
+    return ColorSeed("", seed);
+  }
+
+  Future <bool> monochrome() async{
+    bool? isMonochrome = await prefs.getBool(MONOCHROME);
+    if (isMonochrome == null) {
+      return false;
+    } else return isMonochrome;
   }
 
   Future<void> updateDisplayFont(String newValue) async {
@@ -76,6 +110,33 @@ class SettingsService {
     String? bodyFont = await prefs.getString(BODY_FONT);
     if (newValue != bodyFont) {
       prefs.setString(BODY_FONT, newValue);
+    }
+  }
+
+  Future <void> updateFontSizeFactor(double newValue) async {
+    double? sizeFactor = await prefs.getDouble(FONT_SIZE_FACTOR);
+    if (newValue != sizeFactor) {
+      prefs.setDouble(FONT_SIZE_FACTOR, newValue);
+    }
+  }
+
+  Future <void> updateSeedColor(int newValue) async {
+    int? seedColor = await prefs.getInt(COLOR_SEED);
+    if (newValue != seedColor) {
+      prefs.setInt(COLOR_SEED, newValue);
+    }
+  }
+
+
+
+}
+
+extension on int? {
+  Color? toColor() {
+    if (this == null) {
+      return null;
+    } else {
+      return Color(this!.toInt());
     }
   }
 }

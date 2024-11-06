@@ -22,11 +22,21 @@ class SettingsController with ChangeNotifier {
 
   late String _displayHeadlineFont;
   late String _bodyLabelFont;
+  late double _fontSizeFactor;
+  late ColorSeed _colorSeed;
+
+  late bool _monochrome;
 
   // Allow Widgets to read the user's preferred ThemeMode.
   ThemeMode get themeMode => _themeMode;
   String get displayHeadlineFont => _displayHeadlineFont;
   String get bodyLabelFont => _bodyLabelFont;
+
+  double get fontSizeFactor => _fontSizeFactor;
+
+  ColorSeed get colorSeed => _colorSeed;
+
+  bool get monochrome => _monochrome;
 
   /// Load the user's settings from the SettingsService. It may load from a
   /// local database or the internet. The controller only knows it can load the
@@ -37,6 +47,9 @@ class SettingsController with ChangeNotifier {
     _contrast = await _settingsService.contrast();
     _displayHeadlineFont = await _settingsService.displayHeadlineFont();
     _bodyLabelFont = await _settingsService.bodyLabelFont();
+    _fontSizeFactor = await _settingsService.fontSizeFactor();
+    _colorSeed = await _settingsService.colorSeed();
+    _monochrome = await _settingsService.monochrome();
 
     // Important! Inform listeners a change has occurred.
     notifyListeners();
@@ -60,6 +73,15 @@ class SettingsController with ChangeNotifier {
     await _settingsService.updateThemeMode(newThemeMode);
   }
 
+  // Single seed
+  Future<void> updateSeedColor(String key, int? newValue) async {
+    if (newValue == null) return;
+
+    _colorSeed = ColorSeed("", Color(newValue));
+    await _settingsService.updateSeedColor(newValue);
+    notifyListeners();
+  }
+
   Future<void> updateFonts(String key, String? newValue) async {
     if (newValue == null) return;
 
@@ -67,12 +89,21 @@ class SettingsController with ChangeNotifier {
     if (key == DISPLAY_FONT) {
       _displayHeadlineFont = newValue;
       await _settingsService.updateDisplayFont(newValue);
+      notifyListeners();
     }
     if (key == BODY_FONT) {
       _bodyLabelFont = newValue;
       await _settingsService.updateBodyFont(newValue);
+      notifyListeners();
     }
 
+    notifyListeners();
+  }
+  Future<void> updateFontSizeFactor(double? newValue) async {
+    if (newValue == null) return;
+
+    _fontSizeFactor = newValue;
+    await _settingsService.updateFontSizeFactor(newValue);
     notifyListeners();
   }
 }

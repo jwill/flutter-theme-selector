@@ -6,11 +6,20 @@ import 'package:flutter/material.dart';
 
 String DISPLAY_FONT = "displayFont";
 String BODY_FONT = "bodyFont";
+String FONT_SIZE_FACTOR = "fontSizeFactor";
+double MAX_FONT_SIZE_FACTOR = 2.5;
+String COLOR_SEED = "colorSeed";
+String COLOR_SECONDARY_SEED = "colorSecondarySeed";
+String COLOR_TERTIARY_SEED = "colorTertiarySeed";
+String COLOR_NEUTRAL_SEED = "colorNeutralSeed";
+String COLOR_NV_SEED = "colorNeutralVariantSeed";
+String COLOR_ERROR_SEED = "colorErrorSeed";
+String MONOCHROME = "isMonochrome";
 
 class ColorSeed extends SimpleColorSeed {
-  final Color? _secondarySeed, _tertiarySeed, _errorSeed, _neutralSeed, _neutralVariantSeed;
+  Color? _secondarySeed = null, _tertiarySeed =null, _errorSeed, _neutralSeed, _neutralVariantSeed;
 
-  ColorSeed(super.label, super.seed, this._secondarySeed, this._tertiarySeed, this._errorSeed, this._neutralSeed, this._neutralVariantSeed);
+  ColorSeed(super._label, super._seed);
 
 }
 
@@ -18,7 +27,11 @@ class SimpleColorSeed {
   final String _label;
   final Color _seed;
 
+  String get label => _label;
+
   const SimpleColorSeed(this._label, this._seed);
+
+  Color get seed => _seed;
 }
 
 // enum ColorSeed {

@@ -10,7 +10,7 @@ import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
-  const MyApp({
+  MyApp({
     super.key,
     required this.settingsController,
   });
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return ListenableBuilder(
       listenable: settingsController,
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
+        return MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(settingsController.fontSizeFactor)), child:MaterialApp(
           // Providing a restorationScopeId allows the Navigator built by the
           // MaterialApp to restore the navigation stack when a user leaves and
           // returns to the app after it has been killed while running in the
@@ -58,8 +58,9 @@ class MyApp extends StatelessWidget {
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
-          theme: ThemeData(textTheme: textTheme, colorScheme: lightScheme()),
-          darkTheme: ThemeData(textTheme: textTheme.apply(bodyColor: darkScheme().onSurface), colorScheme: darkScheme()),
+          theme: ThemeData(textTheme: textTheme, colorScheme: ColorScheme.fromSeed(seedColor: settingsController.colorSeed.seed)),
+          darkTheme: ThemeData(textTheme: textTheme.apply(bodyColor: ColorScheme.fromSeed(seedColor: settingsController.colorSeed.seed, brightness: Brightness.dark).onSurface),
+              colorScheme: ColorScheme.fromSeed(seedColor: settingsController.colorSeed.seed, brightness: Brightness.dark)),
           themeMode: settingsController.themeMode,
 
           // Define a function to handle named routes in order to support
@@ -80,7 +81,7 @@ class MyApp extends StatelessWidget {
               },
             );
           },
-        );
+        ));
       },
     );
   }

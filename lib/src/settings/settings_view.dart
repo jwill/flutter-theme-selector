@@ -2,6 +2,8 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_selector/src/settings/font_constants.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
+import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
+import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
 
 import 'constants.dart';
 import 'settings_controller.dart';
@@ -11,13 +13,20 @@ import 'package:google_fonts/google_fonts.dart';
 ///
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
-class SettingsView extends StatelessWidget {
-  const SettingsView({super.key, required this.controller});
+class SettingsView extends StatefulWidget {
+  SettingsView({super.key, required this.controller});
 
   static const routeName = '/settings';
 
   final SettingsController controller;
+  //var fontSizeFactor = 0.0;
 
+  @override
+  State<SettingsView> createState() => _SettingsViewState();
+}
+
+class _SettingsViewState extends State<SettingsView> {
+  double fontSizeFactor = 1.0;
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -39,9 +48,9 @@ class SettingsView extends StatelessWidget {
                   Spacer(),
                   DropdownButton<ThemeMode>(
                     // Read the selected themeMode from the controller
-                    value: controller.themeMode,
+                    value: widget.controller.themeMode,
                     // Call the updateThemeMode method any time the user selects a theme.
-                    onChanged: controller.updateThemeMode,
+                    onChanged: widget.controller.updateThemeMode,
                     items: const [
                       DropdownMenuItem(
                         value: ThemeMode.system,
@@ -64,10 +73,10 @@ class SettingsView extends StatelessWidget {
                 Text("Display Headline Font"),
                 Spacer(),
                 ConstrainedBox(constraints: BoxConstraints(maxWidth: 200), child:
-                DropdownSearch<String>(selectedItem: controller.displayHeadlineFont,
+                DropdownSearch<String>(selectedItem: widget.controller.displayHeadlineFont,
                   items: googleFontsList,
                     onChanged: (newValue)=>
-                    controller.updateFonts(DISPLAY_FONT, newValue),
+                    widget.controller.updateFonts(DISPLAY_FONT, newValue),
                 ),
                 )],),
               SizedBox(height: 16,),
@@ -76,13 +85,50 @@ class SettingsView extends StatelessWidget {
                 Spacer(),
                 ConstrainedBox(constraints: BoxConstraints(maxWidth: 200), child:
                 DropdownSearch<String>(
-                  selectedItem: controller.bodyLabelFont,
+                  selectedItem: widget.controller.bodyLabelFont,
                   items: googleFontsList,
-                  onChanged: (newValue)=>
-                  controller.updateFonts(BODY_FONT, newValue)
+                  onChanged: (newValue) {
+                    setState(() {
+                      widget.controller.updateFonts(BODY_FONT, newValue);
+                    });
+                  }
                 ,
                 ),
-                )],)
+                )],),
+              SizedBox(height: 16,),
+              Row(children: [
+                Text("Font Scale", style: textTheme.bodyLarge,),
+                Spacer(),
+                Slider(
+                  value: widget.controller.fontSizeFactor,
+                  min: 1, max: MAX_FONT_SIZE_FACTOR,
+                  divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
+                  label: fontSizeFactor.toString(),
+                  onChanged: (double value) {
+                    setState(() {
+                        fontSizeFactor = value;
+                        widget.controller.updateFontSizeFactor(value);
+                    });
+                  }
+                ),
+              ],),
+              SizedBox(height: 16,),
+              Text("Themes", style: textTheme.bodyLarge,),
+              SizedBox(height: 8,),
+              ColorField(color: widget.controller.colorSeed.seed, title: "Seed Color", onChanged: (color) {
+                setState(() {
+                  widget.controller.updateSeedColor("seed", color.value);
+                });
+              }),
+              SizedBox(height: 16,),
+              Divider(),
+              Row(children: [
+                ThemeablePieWidget(scheme: ColorScheme.fromSeed(seedColor: Colors.blue), isSelected: false),
+                SizedBox(width: 16,),
+                ThemeablePieWidget(scheme: ColorScheme.fromSeed(seedColor: Colors.green), isSelected: true),
+                SizedBox(width: 16,),
+                ThemeablePieWidget(scheme: ColorScheme.fromSeed(seedColor: Colors.yellow), isSelected: true)
+              ],)
             ],
           )),
     );
