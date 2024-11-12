@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_selector/src/settings/font_constants.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
+import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
 
 import 'constants.dart';
@@ -122,13 +123,16 @@ class _SettingsViewState extends State<SettingsView> {
               }),
               SizedBox(height: 16,),
               Divider(),
-              Row(children: [
-                ThemeablePieWidget(scheme: ColorScheme.fromSeed(seedColor: Colors.blue), isSelected: false),
-                SizedBox(width: 16,),
-                ThemeablePieWidget(scheme: ColorScheme.fromSeed(seedColor: Colors.green), isSelected: true),
-                SizedBox(width: 16,),
-                ThemeablePieWidget(scheme: ColorScheme.fromSeed(seedColor: Colors.yellow), isSelected: true)
-              ],)
+                ThemeChooserPanel(onTap: (value) {
+                  //TODO make a function that allows passing the whole scheme in case we have
+                  // constructed schemes that don't just use a seed color
+                  widget.controller.updateSeedColor("seed", value);
+                },
+                  schemes: [
+                  ColorScheme.fromSeed(seedColor: Colors.blue),
+                  ColorScheme.fromSeed(seedColor: Colors.green),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow)
+                ],),
             ],
           )),
     );
