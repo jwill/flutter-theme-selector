@@ -12,7 +12,7 @@ class SettingsService {
   final SharedPreferencesAsync prefs = SharedPreferencesAsync();
 
   Future<ThemeMode> themeMode() async {
-    int? state = await prefs.getInt("themeMode");
+    int? state = await prefs.getInt(THEME_MODE);
     if (state == null || state == 2) return ThemeMode.system;
     if (state == 0) {
       return ThemeMode.light;
@@ -22,6 +22,16 @@ class SettingsService {
   }
 
   Future<double> contrast() async => 0.0;
+
+  Future<DynamicSchemeVariant> variant() async {
+    String? variant = await prefs.getString(VARIANT);
+    if (variant == null) return DynamicSchemeVariant.tonalSpot;
+    return DynamicSchemeVariant.values.firstWhere((elem) {
+      return elem.name == variant;
+    }, orElse: () {
+      return DynamicSchemeVariant.tonalSpot;
+    });
+  }
 
   Future<void> loadSettings() async {
     final SharedPreferencesAsync prefs = SharedPreferencesAsync();
@@ -92,11 +102,12 @@ class SettingsService {
     return ColorSeed("", seed);
   }
 
-  Future <bool> monochrome() async{
+  Future <bool> monochrome() async {
     bool? isMonochrome = await prefs.getBool(MONOCHROME);
     if (isMonochrome == null) {
       return false;
-    } else return isMonochrome;
+    } else
+      return isMonochrome;
   }
 
   Future<void> updateDisplayFont(String newValue) async {
@@ -127,6 +138,12 @@ class SettingsService {
     }
   }
 
+  Future<void> updateVariant(String newValue) async {
+    String? variant = await prefs.getString(VARIANT);
+    if (newValue != variant) {
+      prefs.setString(VARIANT, newValue);
+    }
+  }
 
 
 }

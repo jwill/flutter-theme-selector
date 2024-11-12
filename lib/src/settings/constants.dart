@@ -15,6 +15,8 @@ String COLOR_NEUTRAL_SEED = "colorNeutralSeed";
 String COLOR_NV_SEED = "colorNeutralVariantSeed";
 String COLOR_ERROR_SEED = "colorErrorSeed";
 String MONOCHROME = "isMonochrome";
+String VARIANT = "variant";
+String THEME_MODE = "themeMode";
 
 class ColorSeed extends SimpleColorSeed {
   Color? _secondarySeed = null, _tertiarySeed =null, _errorSeed, _neutralSeed, _neutralVariantSeed;

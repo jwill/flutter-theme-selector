@@ -45,7 +45,10 @@ class _SettingsViewState extends State<SettingsView> {
             children: [
               Row(
                 children: [
-                  Text("Theme Mode", style: textTheme.titleMedium,),
+                  Text(
+                    "Theme Mode",
+                    style: textTheme.titleMedium,
+                  ),
                   Spacer(),
                   DropdownButton<ThemeMode>(
                     // Read the selected themeMode from the controller
@@ -69,70 +72,126 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                 ],
               ),
-              SizedBox(height: 16,),
-              Row(children: [
-                Text("Display Headline Font"),
-                Spacer(),
-                ConstrainedBox(constraints: BoxConstraints(maxWidth: 200), child:
-                DropdownSearch<String>(selectedItem: widget.controller.displayHeadlineFont,
-                  items: googleFontsList,
-                    onChanged: (newValue)=>
-                    widget.controller.updateFonts(DISPLAY_FONT, newValue),
-                ),
-                )],),
-              SizedBox(height: 16,),
-              Row(children: [
-                Text("Body Label Font", style: textTheme.bodyLarge,),
-                Spacer(),
-                ConstrainedBox(constraints: BoxConstraints(maxWidth: 200), child:
-                DropdownSearch<String>(
-                  selectedItem: widget.controller.bodyLabelFont,
-                  items: googleFontsList,
-                  onChanged: (newValue) {
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Text("Display Headline Font"),
+                  Spacer(),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 200),
+                    child: DropdownSearch<String>(
+                      selectedItem: widget.controller.displayHeadlineFont,
+                      items: googleFontsList,
+                      onChanged: (newValue) =>
+                          widget.controller.updateFonts(DISPLAY_FONT, newValue),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Body Label Font",
+                    style: textTheme.bodyLarge,
+                  ),
+                  Spacer(),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 200),
+                    child: DropdownSearch<String>(
+                      selectedItem: widget.controller.bodyLabelFont,
+                      items: googleFontsList,
+                      onChanged: (newValue) {
+                        setState(() {
+                          widget.controller.updateFonts(BODY_FONT, newValue);
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Font Scale",
+                    style: textTheme.bodyLarge,
+                  ),
+                  Spacer(),
+                  Slider(
+                      value: widget.controller.fontSizeFactor,
+                      min: 1,
+                      max: MAX_FONT_SIZE_FACTOR,
+                      divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
+                      label: fontSizeFactor.toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          fontSizeFactor = value;
+                          widget.controller.updateFontSizeFactor(value);
+                        });
+                      }),
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                "Themes",
+                style: textTheme.bodyLarge,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              ColorField(
+                  color: widget.controller.colorSeed.seed,
+                  title: "Seed Color",
+                  onChanged: (color) {
                     setState(() {
-                      widget.controller.updateFonts(BODY_FONT, newValue);
+                      widget.controller.updateSeedColor("seed", color.value);
                     });
-                  }
-                ,
-                ),
-                )],),
-              SizedBox(height: 16,),
+                  }),
+              SizedBox(
+                height: 16,
+              ),
               Row(children: [
-                Text("Font Scale", style: textTheme.bodyLarge,),
-                Spacer(),
-                Slider(
-                  value: widget.controller.fontSizeFactor,
-                  min: 1, max: MAX_FONT_SIZE_FACTOR,
-                  divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
-                  label: fontSizeFactor.toString(),
-                  onChanged: (double value) {
-                    setState(() {
-                        fontSizeFactor = value;
-                        widget.controller.updateFontSizeFactor(value);
-                    });
-                  }
+                Text(
+                  "Dynamic Variant",
+                  style: textTheme.bodyLarge,
                 ),
-              ],),
-              SizedBox(height: 16,),
-              Text("Themes", style: textTheme.bodyLarge,),
-              SizedBox(height: 8,),
-              ColorField(color: widget.controller.colorSeed.seed, title: "Seed Color", onChanged: (color) {
-                setState(() {
-                  widget.controller.updateSeedColor("seed", color.value);
-                });
-              }),
-              SizedBox(height: 16,),
+                Spacer(),
+                ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 200),
+                    child: DropdownSearch<String>(
+                        selectedItem: widget.controller.variant.name,
+                        items: DynamicSchemeVariant.values.map((v) {
+                          return v.name;
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            widget.controller.updateVariant(VARIANT, newValue);
+                            widget.controller.updateSeedColor(COLOR_SEED, widget.controller.colorSeed.seed.value);
+                          });
+                        }))
+              ]),
               Divider(),
-                ThemeChooserPanel(onTap: (value) {
+              ThemeChooserPanel(
+                onTap: (value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
                   widget.controller.updateSeedColor("seed", value);
                 },
-                  schemes: [
+                schemes: [
                   ColorScheme.fromSeed(seedColor: Colors.blue),
                   ColorScheme.fromSeed(seedColor: Colors.green),
                   ColorScheme.fromSeed(seedColor: Colors.yellow)
-                ],),
+                ],
+              ),
             ],
           )),
     );
