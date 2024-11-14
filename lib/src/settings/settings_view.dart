@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_selector/src/settings/font_constants.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
+import 'package:flutter_theme_selector/src/settings/widgets/font_selector.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
 
@@ -28,6 +29,14 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   double fontSizeFactor = 1.0;
+
+  void onChangedFontScale(double value) {
+      setState(() {
+        fontSizeFactor = value;
+        widget.controller.updateFontSizeFactor(value);
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -47,7 +56,7 @@ class _SettingsViewState extends State<SettingsView> {
                 children: [
                   Text(
                     "Theme Mode",
-                    style: textTheme.titleMedium,
+                    style: textTheme.bodyLarge,
                   ),
                   Spacer(),
                   DropdownButton<ThemeMode>(
@@ -75,69 +84,7 @@ class _SettingsViewState extends State<SettingsView> {
               SizedBox(
                 height: 16,
               ),
-              Row(
-                children: [
-                  Text("Display Headline Font"),
-                  Spacer(),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 200),
-                    child: DropdownSearch<String>(
-                      selectedItem: widget.controller.displayHeadlineFont,
-                      items: googleFontsList,
-                      onChanged: (newValue) =>
-                          widget.controller.updateFonts(DISPLAY_FONT, newValue),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Body Label Font",
-                    style: textTheme.bodyLarge,
-                  ),
-                  Spacer(),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 200),
-                    child: DropdownSearch<String>(
-                      selectedItem: widget.controller.bodyLabelFont,
-                      items: googleFontsList,
-                      onChanged: (newValue) {
-                        setState(() {
-                          widget.controller.updateFonts(BODY_FONT, newValue);
-                        });
-                      },
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Font Scale",
-                    style: textTheme.bodyLarge,
-                  ),
-                  Spacer(),
-                  Slider(
-                      value: widget.controller.fontSizeFactor,
-                      min: 1,
-                      max: MAX_FONT_SIZE_FACTOR,
-                      divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
-                      label: fontSizeFactor.toString(),
-                      onChanged: (double value) {
-                        setState(() {
-                          fontSizeFactor = value;
-                          widget.controller.updateFontSizeFactor(value);
-                        });
-                      }),
-                ],
-              ),
+              FontSelector(controller: widget.controller),
               SizedBox(
                 height: 16,
               ),
@@ -179,6 +126,24 @@ class _SettingsViewState extends State<SettingsView> {
                           });
                         }))
               ]),
+              Row(
+                children: [
+                  Text(
+                    "Contrast",
+                    style: textTheme.bodyLarge,
+                  ),
+                  Spacer(),
+                  Slider(
+                      value: widget.controller.contrast,
+                      min: -1,
+                      max: 1,
+                      divisions: 20,
+                      label: widget.controller.contrast.toString(),
+                      onChanged: (value){
+                        widget.controller.updateContrast(value);
+                      }),
+                ],
+              ),
               Divider(),
               ThemeChooserPanel(
                 onTap: (value) {
@@ -187,9 +152,9 @@ class _SettingsViewState extends State<SettingsView> {
                   widget.controller.updateSeedColor("seed", value);
                 },
                 schemes: [
-                  ColorScheme.fromSeed(seedColor: Colors.blue),
-                  ColorScheme.fromSeed(seedColor: Colors.green),
-                  ColorScheme.fromSeed(seedColor: Colors.yellow)
+                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: widget.controller.contrast),
+                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: widget.controller.contrast),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: widget.controller.contrast)
                 ],
               ),
             ],

@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData(textTheme: textTheme.apply(bodyColor: ColorScheme.fromSeed(seedColor: settingsController.colorSeed.seed, brightness: Brightness.dark).onSurface),
               colorScheme: settingsController.colorScheme(Brightness.dark)),
           themeMode: settingsController.themeMode,
+          debugShowCheckedModeBanner: false,
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.

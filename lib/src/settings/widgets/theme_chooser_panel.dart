@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
 import 'package:flutter_theme_selector/src/utils.dart';
 
-import '../settings_controller.dart';
 class ThemeChooserPanel extends StatefulWidget {
   final List<ColorScheme> schemes;
 

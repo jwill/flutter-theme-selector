@@ -131,6 +131,13 @@ class SettingsService {
     }
   }
 
+  Future <void> updateContrast(double newValue) async {
+    double? contrastSize = await prefs.getDouble(CONTRAST_VALUE);
+    if (newValue != contrastSize) {
+      prefs.setDouble(CONTRAST_VALUE, newValue);
+    }
+  }
+
   Future <void> updateSeedColor(int newValue) async {
     int? seedColor = await prefs.getInt(COLOR_SEED);
     if (newValue != seedColor) {

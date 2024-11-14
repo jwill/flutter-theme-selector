@@ -38,6 +38,8 @@ class SettingsController with ChangeNotifier {
 
   ColorSeed get colorSeed => _colorSeed;
 
+  double get contrast => _contrast;
+
   ColorScheme colorScheme(Brightness brightness) {
     return ColorScheme.fromSeed(seedColor: _colorSeed.seed, brightness: brightness, dynamicSchemeVariant: _variant);
   }
@@ -113,6 +115,14 @@ class SettingsController with ChangeNotifier {
 
     _fontSizeFactor = newValue;
     await _settingsService.updateFontSizeFactor(newValue);
+    notifyListeners();
+  }
+
+  Future<void> updateContrast(double? newValue) async {
+    if (newValue == null) return;
+
+    _contrast = newValue;
+    await _settingsService.updateContrast(newValue);
     notifyListeners();
   }
 
