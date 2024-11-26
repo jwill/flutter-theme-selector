@@ -8,7 +8,10 @@ class ThemeChooserPanel extends StatefulWidget {
 
   final Function onTap;
 
-  const ThemeChooserPanel({super.key, required this.onTap, required this.schemes});
+  final bool displayOnlyPrimary;
+
+  const ThemeChooserPanel({super.key, required this.onTap,
+    required this.schemes, this.displayOnlyPrimary = false});
 
   @override
   State<ThemeChooserPanel> createState() => _ThemeChooserPanelState();
@@ -19,7 +22,7 @@ class _ThemeChooserPanelState extends State<ThemeChooserPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: MediaQuery.of(context).size.width,height: 200, child: ListView.builder(
+    return SizedBox(width: MediaQuery.of(context).size.width,height: 132, child: ListView.builder(
       itemCount: widget.schemes.length,
         padding: const EdgeInsets.only(top:16, bottom: 16),
         scrollDirection: Axis.horizontal,
@@ -35,7 +38,9 @@ class _ThemeChooserPanelState extends State<ThemeChooserPanel> {
 
             });
             },
-          child: ThemeablePieWidget(scheme: currentScheme, isSelected: currentScheme == _selectedColorScheme)));
+          child: ThemeablePieWidget(scheme: currentScheme,
+            isSelected: currentScheme == _selectedColorScheme,
+            isSingleColor: widget.displayOnlyPrimary,)));
     }));
   }
 }

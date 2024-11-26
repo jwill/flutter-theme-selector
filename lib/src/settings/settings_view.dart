@@ -88,12 +88,9 @@ class _SettingsViewState extends State<SettingsView> {
               SizedBox(
                 height: 16,
               ),
-              Text(
-                "Themes",
-                style: textTheme.bodyLarge,
-              ),
+              Divider(),
               SizedBox(
-                height: 8,
+                height: 16,
               ),
               ColorField(
                   color: widget.controller.colorSeed.seed,
@@ -146,6 +143,20 @@ class _SettingsViewState extends State<SettingsView> {
               ),
               Divider(),
               ThemeChooserPanel(
+                onTap: (value) {
+                  //TODO make a function that allows passing the whole scheme in case we have
+                  // constructed schemes that don't just use a seed color
+                  widget.controller.updateSeedColor("seed", value);
+                },
+                schemes: [
+                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: widget.controller.contrast),
+                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: widget.controller.contrast),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: widget.controller.contrast)
+                ],
+              ),
+              Divider(),
+              ThemeChooserPanel(
+                displayOnlyPrimary: true,
                 onTap: (value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
