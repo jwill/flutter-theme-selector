@@ -8,10 +8,11 @@ import '../font_constants.dart';
 
 class FontSelector extends StatefulWidget{
   final SettingsSignalsService service;
+  final List<String> fontList;
 
   const FontSelector(
       {super.key,
-      required this.service});
+      required this.service, this.fontList = googleFontsList});
 
   @override
   State<FontSelector> createState() => _FontSelectorState();
@@ -35,7 +36,7 @@ class _FontSelectorState extends State<FontSelector> {
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
                 selectedItem: widget.service.displayHeadlineFont.value,
-                items: googleFontsList,
+                items: widget.fontList,
                 onChanged: (newValue) {
                   widget.service.displayHeadlineFont.value = newValue!;
                 }
@@ -58,7 +59,7 @@ class _FontSelectorState extends State<FontSelector> {
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
                 selectedItem: widget.service.bodyLabelFont.value,
-                items: googleFontsList,
+                items: widget.fontList,
                 onChanged: (newValue) {
                   widget.service.bodyLabelFont.value = newValue!;
                 },

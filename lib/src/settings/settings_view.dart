@@ -67,7 +67,7 @@ class _SettingsViewState extends State<SettingsView> {
               SizedBox(
                 height: 16,
               ),
-              FontSelector(service: widget.signals),
+              FontSelector(service: widget.signals, fontList: ['Abril Fatface', 'Bokor','Noto Sans', 'Roboto'],),
               SizedBox(
                 height: 16,
               ),
