@@ -1,55 +1,40 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_selector/src/settings/font_constants.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/font_selector.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
-import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
-
-import 'constants.dart';
-import 'settings_controller.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_theme_selector/src/utils.dart';
+import 'package:signals/signals_flutter.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatefulWidget {
-  SettingsView({super.key, required this.controller});
+  SettingsView({super.key, required this.signals});
 
   static const routeName = '/settings';
 
-  final SettingsController controller;
-  //var fontSizeFactor = 0.0;
+  final SettingsSignalsService signals;
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  double fontSizeFactor = 1.0;
-
-  void onChangedFontScale(double value) {
-      setState(() {
-        fontSizeFactor = value;
-        widget.controller.updateFontSizeFactor(value);
-      });
-  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final contrastNotifier = widget.signals.contrast.toValueNotifier();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
       ),
       body: Padding(
           padding: const EdgeInsets.all(16),
-          // Glue the SettingsController to the theme selection DropdownButton.
-          //
-          // When a user selects a theme from the dropdown list, the
-          // SettingsController is updated, which rebuilds the MaterialApp.
           child: Column(
             children: [
               Row(
@@ -59,22 +44,20 @@ class _SettingsViewState extends State<SettingsView> {
                     style: textTheme.bodyLarge,
                   ),
                   Spacer(),
-                  DropdownButton<ThemeMode>(
-                    // Read the selected themeMode from the controller
-                    value: widget.controller.themeMode,
-                    // Call the updateThemeMode method any time the user selects a theme.
-                    onChanged: widget.controller.updateThemeMode,
+                  DropdownButton<String>(
+                    value: widget.signals.themeMode.value,
+                    onChanged: (v) => widget.signals.themeMode.value = v!,
                     items: const [
                       DropdownMenuItem(
-                        value: ThemeMode.system,
+                        value: "system",
                         child: Text('System Theme'),
                       ),
                       DropdownMenuItem(
-                        value: ThemeMode.light,
+                        value: "light",
                         child: Text('Light Theme'),
                       ),
                       DropdownMenuItem(
-                        value: ThemeMode.dark,
+                        value: "dark",
                         child: Text('Dark Theme'),
                       )
                     ],
@@ -84,7 +67,7 @@ class _SettingsViewState extends State<SettingsView> {
               SizedBox(
                 height: 16,
               ),
-              FontSelector(controller: widget.controller),
+              FontSelector(service: widget.signals, fontList: ['Abril Fatface', 'Bokor','Noto Sans', 'Roboto'],),
               SizedBox(
                 height: 16,
               ),
@@ -93,11 +76,11 @@ class _SettingsViewState extends State<SettingsView> {
                 height: 16,
               ),
               ColorField(
-                  color: widget.controller.colorSeed.seed,
+                  color: int.parse(widget.signals.seed.value).toColor()!,
                   title: "Seed Color",
                   onChanged: (color) {
                     setState(() {
-                      widget.controller.updateSeedColor("seed", color.value);
+                      widget.signals.seed.value = color.value.toString();
                     });
                   }),
               SizedBox(
@@ -112,14 +95,13 @@ class _SettingsViewState extends State<SettingsView> {
                 ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 200),
                     child: DropdownSearch<String>(
-                        selectedItem: widget.controller.variant.name,
+                        selectedItem: widget.signals.variant.value,
                         items: DynamicSchemeVariant.values.map((v) {
                           return v.name;
                         }).toList(),
                         onChanged: (newValue) {
                           setState(() {
-                            widget.controller.updateVariant(VARIANT, newValue);
-                            widget.controller.updateSeedColor(COLOR_SEED, widget.controller.colorSeed.seed.value);
+                            widget.signals.variant.value = newValue!;
                           });
                         }))
               ]),
@@ -131,27 +113,27 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   Spacer(),
                   Slider(
-                      value: widget.controller.contrast,
+                      value: double.parse(contrastNotifier.value),
                       min: -1,
                       max: 1,
                       divisions: 20,
-                      label: widget.controller.contrast.toString(),
+                      label: widget.signals.contrast.value.toString(),
                       onChanged: (value){
-                        widget.controller.updateContrast(value);
+                        widget.signals.contrast.value = value.toString();
                       }),
                 ],
               ),
               Divider(),
               ThemeChooserPanel(
-                onTap: (value) {
+                onTap: (String value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
-                  widget.controller.updateSeedColor("seed", value);
+                  widget.signals.seed.value = value;
                 },
                 schemes: [
-                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: widget.controller.contrast)
+                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: double.parse(contrastNotifier.value))
                 ],
               ),
               Divider(),
@@ -160,12 +142,13 @@ class _SettingsViewState extends State<SettingsView> {
                 onTap: (value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
-                  widget.controller.updateSeedColor("seed", value);
+                  print(value);
+                  widget.signals.seed.value = value;
                 },
                 schemes: [
-                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: widget.controller.contrast)
+                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: double.parse(contrastNotifier.value))
                 ],
               ),
             ],

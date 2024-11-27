@@ -34,7 +34,7 @@ class _ThemeChooserPanelState extends State<ThemeChooserPanel> {
               _selectedColorScheme = currentScheme;
               //TODO make a function that allows passing the whole scheme in case we have
               // constructed schemes that don't just use a seed color
-              widget.onTap(_selectedColorScheme!.primary.value);
+              widget.onTap(_selectedColorScheme!.primary.value.toString());
 
             });
             },
