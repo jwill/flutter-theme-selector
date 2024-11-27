@@ -5,12 +5,11 @@ import 'package:signals/signals_flutter.dart';
 
 import '../constants.dart';
 import '../font_constants.dart';
-import '../settings_controller.dart';
 
 class FontSelector extends StatefulWidget{
   final SettingsSignalsService service;
 
-  FontSelector(
+  const FontSelector(
       {super.key,
       required this.service});
 

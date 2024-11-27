@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 
 import 'constants.dart';
-import 'settings_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Displays the various settings that can be customized by the user.
