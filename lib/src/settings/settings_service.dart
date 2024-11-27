@@ -128,15 +128,6 @@ class SettingsSignalsService {
     //   }
     // }
 
-
-
-    Future <void> updateSeedColor(int newValue) async {
-      int? seedColor = await prefs.getInt(COLOR_SEED);
-      if (newValue != seedColor) {
-        prefs.setInt(COLOR_SEED, newValue);
-      }
-    }
-
     Future<void> updateVariant(String newValue) async {
       String? variant = await prefs.getString(VARIANT);
       if (newValue != variant) {

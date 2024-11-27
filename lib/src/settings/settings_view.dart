@@ -6,6 +6,7 @@ import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/font_selector.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
+import 'package:flutter_theme_selector/src/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -91,11 +92,11 @@ class _SettingsViewState extends State<SettingsView> {
                 height: 16,
               ),
               ColorField(
-                  color: widget.controller.colorSeed.seed,
+                  color: int.parse(widget.signals.seed.value).toColor()!,
                   title: "Seed Color",
                   onChanged: (color) {
                     setState(() {
-                      widget.controller.updateSeedColor("seed", color.value);
+                      widget.signals.seed.value = color.value.toString();
                     });
                   }),
               SizedBox(
@@ -117,7 +118,7 @@ class _SettingsViewState extends State<SettingsView> {
                         onChanged: (newValue) {
                           setState(() {
                             widget.controller.updateVariant(VARIANT, newValue);
-                            widget.controller.updateSeedColor(COLOR_SEED, widget.controller.colorSeed.seed.value);
+                            //widget.controller.updateSeedColor(COLOR_SEED, widget.controller.colorSeed.seed.value);
                           });
                         }))
               ]),
@@ -142,10 +143,11 @@ class _SettingsViewState extends State<SettingsView> {
               ),
               Divider(),
               ThemeChooserPanel(
-                onTap: (value) {
+                onTap: (String value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
-                  widget.controller.updateSeedColor("seed", value);
+                  //widget.controller.updateSeedColor("seed", value);
+                  widget.signals.seed.value = value;
                 },
                 schemes: [
                   ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: double.parse(contrastNotifier.value)),
@@ -159,7 +161,8 @@ class _SettingsViewState extends State<SettingsView> {
                 onTap: (value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
-                  widget.controller.updateSeedColor("seed", value);
+                  print(value);
+                  widget.signals.seed.value = value;
                 },
                 schemes: [
                   ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: double.parse(contrastNotifier.value)),

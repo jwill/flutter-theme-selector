@@ -23,6 +23,11 @@ SignalValueNotifier<TextTheme> createTextTheme(BuildContext context, Signal<Stri
   return SignalValueNotifier(textTheme);
 }
 
+SignalValueNotifier<ColorScheme> colorScheme(Brightness brightness, Signal<String> seed, Signal<DynamicSchemeVariant> variant) {
+
+  return SignalValueNotifier(ColorScheme.fromSeed(seedColor: int.parse(seed.value).toColor()!, brightness: brightness, dynamicSchemeVariant: variant.value));
+}
+
 extension ColorUtils on Color {
   String toHex() {
     final rr = (r * 255.0).round().toRadixString(16).padLeft(2, '0');

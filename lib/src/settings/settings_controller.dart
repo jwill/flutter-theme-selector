@@ -36,13 +36,9 @@ class SettingsController with ChangeNotifier {
 
   //double get fontSizeFactor => _fontSizeFactor;
 
-  ColorSeed get colorSeed => _colorSeed;
+  //ColorSeed get colorSeed => _colorSeed;
 
   //double get contrast => _contrast;
-
-  ColorScheme colorScheme(Brightness brightness) {
-    return ColorScheme.fromSeed(seedColor: _colorSeed.seed, brightness: brightness, dynamicSchemeVariant: _variant);
-  }
 
   bool get monochrome => _monochrome;
 
@@ -57,7 +53,7 @@ class SettingsController with ChangeNotifier {
     //_displayHeadlineFont = await _settingsService.displayHeadlineFont();
     //_bodyLabelFont = await _settingsService.bodyLabelFont();
     //_fontSizeFactor = await _settingsService.fontSizeFactor();
-    _colorSeed = await _settingsService.colorSeed();
+    //_colorSeed = await _settingsService.colorSeed();
     _monochrome = await _settingsService.monochrome();
     _variant = await _settingsService.variant();
 
@@ -84,13 +80,13 @@ class SettingsController with ChangeNotifier {
   // }
 
   // Single seed
-  Future<void> updateSeedColor(String key, int? newValue) async {
-    if (newValue == null) return;
-
-    _colorSeed = ColorSeed("", Color(newValue));
-    await _settingsService.updateSeedColor(newValue);
-    notifyListeners();
-  }
+  // Future<void> updateSeedColor(String key, int? newValue) async {
+  //   if (newValue == null) return;
+  //
+  //   _colorSeed = ColorSeed("", Color(newValue));
+  //   await _settingsService.updateSeedColor(newValue);
+  //   notifyListeners();
+  // }
 
   // Future<void> updateFonts(String key, String? newValue) async {
   //   if (newValue == null) return;

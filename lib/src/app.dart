@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
     Signal<String> fontScale = settingsService.fontScale;
     Signal<String> displayFont = settingsService.displayHeadlineFont;
     Signal<String> bodyFont = settingsService.bodyLabelFont;
+    Signal<String> seed = settingsService.seed;
 
     return ListenableBuilder(
       listenable: settingsController,
@@ -69,16 +70,17 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                     textTheme:
                         createTextTheme(context, bodyFont, displayFont).value,
+                    //TODO
                     colorScheme:
-                        settingsController.colorScheme(Brightness.light)),
+                        colorScheme(Brightness.light, seed, Signal(DynamicSchemeVariant.tonalSpot)).value),
                 darkTheme: ThemeData(
                     textTheme: createTextTheme(context, bodyFont, displayFont).value.apply(
                         bodyColor: ColorScheme.fromSeed(
-                                seedColor: settingsController.colorSeed.seed,
+                                seedColor: int.parse(seed.value).toColor()!,
                                 brightness: Brightness.dark)
                             .onSurface),
                     colorScheme:
-                        settingsController.colorScheme(Brightness.dark)),
+                        colorScheme(Brightness.dark, seed, Signal(DynamicSchemeVariant.tonalSpot)).value),
                 themeMode: themeMode.value.toThemeMode(),
                 debugShowCheckedModeBanner: false,
 
