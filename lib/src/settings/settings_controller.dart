@@ -30,7 +30,7 @@ class SettingsController with ChangeNotifier {
   late DynamicSchemeVariant _variant;
 
   // Allow Widgets to read the user's preferred ThemeMode.
-  ThemeMode get themeMode => _themeMode;
+  //ThemeMode get themeMode => _themeMode;
   //String get displayHeadlineFont => _displayHeadlineFont;
   //String get bodyLabelFont => _bodyLabelFont;
 
@@ -40,9 +40,9 @@ class SettingsController with ChangeNotifier {
 
   //double get contrast => _contrast;
 
-  bool get monochrome => _monochrome;
+  //bool get monochrome => _monochrome;
 
-  DynamicSchemeVariant get variant => _variant;
+  //DynamicSchemeVariant get variant => _variant;
 
   /// Load the user's settings from the SettingsService. It may load from a
   /// local database or the internet. The controller only knows it can load the
@@ -54,8 +54,8 @@ class SettingsController with ChangeNotifier {
     //_bodyLabelFont = await _settingsService.bodyLabelFont();
     //_fontSizeFactor = await _settingsService.fontSizeFactor();
     //_colorSeed = await _settingsService.colorSeed();
-    _monochrome = await _settingsService.monochrome();
-    _variant = await _settingsService.variant();
+    //_monochrome = await _settingsService.monochrome();
+    //_variant = await _settingsService.variant();
 
     // Important! Inform listeners a change has occurred.
     notifyListeners();
@@ -121,10 +121,10 @@ class SettingsController with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> updateVariant(String variant, String? newValue) async {
-    if (newValue == null) return;
-
-    _variant = DynamicSchemeVariant.values.firstWhere((v) {return newValue == v.name;});
-    await _settingsService.updateVariant(newValue);
-  }
+  // Future<void> updateVariant(String variant, String? newValue) async {
+  //   if (newValue == null) return;
+  //
+  //   _variant = DynamicSchemeVariant.values.firstWhere((v) {return newValue == v.name;});
+  //   await _settingsService.updateVariant(newValue);
+  // }
 }

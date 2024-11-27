@@ -38,6 +38,7 @@ class SettingsSignalsService {
   Signal<String> get contrast => setting((CONTRAST_VALUE, DEFAULT_CONTRAST));
   Signal<String> get displayHeadlineFont => setting((DISPLAY_FONT, "Noto Sans"));
   Signal<String> get bodyLabelFont => setting((BODY_FONT, "Noto Sans"));
+  Signal<String> get variant => setting((VARIANT, "tonalSpot")); //TODO
 
   // Signal<ColorSeed> get colorSeed {
   //
@@ -53,38 +54,6 @@ class SettingsSignalsService {
       setting.dispose();
     }
 
-
-    Future<DynamicSchemeVariant> variant() async {
-      String? variant = await prefs.getString(VARIANT);
-      if (variant == null) return DynamicSchemeVariant.tonalSpot;
-      return DynamicSchemeVariant.values.firstWhere((elem) {
-        return elem.name == variant;
-      }, orElse: () {
-        return DynamicSchemeVariant.tonalSpot;
-      });
-    }
-
-    Future<void> loadSettings() async {
-      final SharedPreferencesAsync prefs = SharedPreferencesAsync();
-      //TODO
-    }
-
-    // /// Persists the user's preferred ThemeMode to local or remote storage.
-    // Future<void> updateThemeMode(ThemeMode mode) async {
-    //   // Use the shared_preferences package to persist settings locally or the
-    //   // http package to persist settings over the network.
-    //   switch (mode) {
-    //     case ThemeMode.light:
-    //       prefs.setString("themeMode", "light");
-    //       break;
-    //     case ThemeMode.dark:
-    //       prefs.setString("themeMode", "dark");
-    //       break;
-    //     case ThemeMode.system:
-    //       prefs.setString("themeMode", "system");
-    //       break;
-    //   }
-    // }
 
   Future <ColorSeed> colorSeed2() async {
     Color? seed = (await prefs.getInt(COLOR_SEED))?.toColor();

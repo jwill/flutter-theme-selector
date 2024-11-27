@@ -19,11 +19,9 @@ import 'package:google_fonts/google_fonts.dart';
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatefulWidget {
-  SettingsView({super.key, required this.controller, required this.signals});
+  SettingsView({super.key, required this.signals});
 
   static const routeName = '/settings';
-
-  final SettingsController controller;
 
   final SettingsSignalsService signals;
   //var fontSizeFactor = 0.0;
@@ -83,7 +81,7 @@ class _SettingsViewState extends State<SettingsView> {
               SizedBox(
                 height: 16,
               ),
-              FontSelector(controller: widget.controller, service: widget.signals),
+              FontSelector(service: widget.signals),
               SizedBox(
                 height: 16,
               ),
@@ -111,13 +109,13 @@ class _SettingsViewState extends State<SettingsView> {
                 ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: 200),
                     child: DropdownSearch<String>(
-                        selectedItem: widget.controller.variant.name,
+                        selectedItem: widget.signals.variant.value,
                         items: DynamicSchemeVariant.values.map((v) {
                           return v.name;
                         }).toList(),
                         onChanged: (newValue) {
                           setState(() {
-                            widget.controller.updateVariant(VARIANT, newValue);
+                            widget.signals.variant.value = newValue!;
                             //widget.controller.updateSeedColor(COLOR_SEED, widget.controller.colorSeed.seed.value);
                           });
                         }))

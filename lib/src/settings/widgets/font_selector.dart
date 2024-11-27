@@ -8,12 +8,11 @@ import '../font_constants.dart';
 import '../settings_controller.dart';
 
 class FontSelector extends StatefulWidget{
-  final SettingsController controller;
   final SettingsSignalsService service;
 
   FontSelector(
       {super.key,
-      required this.controller, required this.service});
+      required this.service});
 
   @override
   State<FontSelector> createState() => _FontSelectorState();

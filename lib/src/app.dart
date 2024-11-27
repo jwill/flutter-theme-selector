@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
     Signal<String> displayFont = settingsService.displayHeadlineFont;
     Signal<String> bodyFont = settingsService.bodyLabelFont;
     Signal<String> seed = settingsService.seed;
+    Signal<String> variant = settingsService.variant;
 
     return ListenableBuilder(
       listenable: settingsController,
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
                         createTextTheme(context, bodyFont, displayFont).value,
                     //TODO
                     colorScheme:
-                        colorScheme(Brightness.light, seed, Signal(DynamicSchemeVariant.tonalSpot)).value),
+                        colorScheme(Brightness.light, seed, variant).value),
                 darkTheme: ThemeData(
                     textTheme: createTextTheme(context, bodyFont, displayFont).value.apply(
                         bodyColor: ColorScheme.fromSeed(
@@ -80,7 +81,7 @@ class MyApp extends StatelessWidget {
                                 brightness: Brightness.dark)
                             .onSurface),
                     colorScheme:
-                        colorScheme(Brightness.dark, seed, Signal(DynamicSchemeVariant.tonalSpot)).value),
+                        colorScheme(Brightness.dark, seed,variant).value),
                 themeMode: themeMode.value.toThemeMode(),
                 debugShowCheckedModeBanner: false,
 
@@ -93,7 +94,6 @@ class MyApp extends StatelessWidget {
                       switch (routeSettings.name) {
                         case SettingsView.routeName:
                           return SettingsView(
-                            controller: settingsController,
                             signals: settingsService,
                           );
                         case SampleItemDetailsView.routeName:
