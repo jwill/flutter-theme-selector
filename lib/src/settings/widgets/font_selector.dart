@@ -1,5 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_theme_selector/src/settings/settings_service.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../constants.dart';
 import '../font_constants.dart';
@@ -7,14 +9,16 @@ import '../settings_controller.dart';
 
 class FontSelector extends StatelessWidget {
   final SettingsController controller;
+  final SettingsSignalsService service;
 
   const FontSelector(
       {super.key,
-      required this.controller});
+      required this.controller, required this.service});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final notifier = service.fontScale.toValueNotifier();
 
     return Column(
       children: [
@@ -69,13 +73,14 @@ class FontSelector extends StatelessWidget {
             ),
             Spacer(),
             Slider(
-                value: controller.fontSizeFactor,
+                value: double.parse(notifier.value),
                 min: 1,
                 max: MAX_FONT_SIZE_FACTOR,
                 divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
-                label: controller.fontSizeFactor.toString(),
+                label: service.fontScale.value.toString(),
                 onChanged: (value){
-                  controller.updateFontSizeFactor(value);
+                  service.fontScale.value = value.toString();
+                  //controller.updateFontSizeFactor(value);
                 }),
           ],
         )

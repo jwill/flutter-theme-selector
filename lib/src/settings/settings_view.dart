@@ -6,6 +6,8 @@ import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/font_selector.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:signals/signals_flutter.dart';
 
 import 'constants.dart';
 import 'settings_controller.dart';
@@ -16,11 +18,13 @@ import 'package:google_fonts/google_fonts.dart';
 /// When a user changes a setting, the SettingsController is updated and
 /// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatefulWidget {
-  SettingsView({super.key, required this.controller});
+  SettingsView({super.key, required this.controller, required this.signals});
 
   static const routeName = '/settings';
 
   final SettingsController controller;
+
+  final SettingsSignalsService signals;
   //var fontSizeFactor = 0.0;
 
   @override
@@ -59,22 +63,22 @@ class _SettingsViewState extends State<SettingsView> {
                     style: textTheme.bodyLarge,
                   ),
                   Spacer(),
-                  DropdownButton<ThemeMode>(
+                  DropdownButton<String>(
                     // Read the selected themeMode from the controller
-                    value: widget.controller.themeMode,
+                    value: widget.signals.themeMode.value,
                     // Call the updateThemeMode method any time the user selects a theme.
-                    onChanged: widget.controller.updateThemeMode,
+                    onChanged: (v) => widget.signals.themeMode.value = v!,
                     items: const [
                       DropdownMenuItem(
-                        value: ThemeMode.system,
+                        value: "system",
                         child: Text('System Theme'),
                       ),
                       DropdownMenuItem(
-                        value: ThemeMode.light,
+                        value: "light",
                         child: Text('Light Theme'),
                       ),
                       DropdownMenuItem(
-                        value: ThemeMode.dark,
+                        value: "dark",
                         child: Text('Dark Theme'),
                       )
                     ],
@@ -84,7 +88,7 @@ class _SettingsViewState extends State<SettingsView> {
               SizedBox(
                 height: 16,
               ),
-              FontSelector(controller: widget.controller),
+              FontSelector(controller: widget.controller, service: widget.signals),
               SizedBox(
                 height: 16,
               ),
