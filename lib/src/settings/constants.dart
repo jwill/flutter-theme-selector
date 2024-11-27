@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 
 String DEFAULT_COLOR = "#67054A";
+String DEFAULT_CONTRAST = "0.0";
 String DISPLAY_FONT = "displayFont";
 String BODY_FONT = "bodyFont";
 String FONT_SIZE_FACTOR = "fontSizeFactor";

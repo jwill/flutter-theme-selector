@@ -32,18 +32,12 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  double fontSizeFactor = 1.0;
-
-  void onChangedFontScale(double value) {
-      setState(() {
-        fontSizeFactor = value;
-        widget.controller.updateFontSizeFactor(value);
-      });
-  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final contrastNotifier = widget.signals.contrast.toValueNotifier();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -135,13 +129,14 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   Spacer(),
                   Slider(
-                      value: widget.controller.contrast,
+                      value: double.parse(contrastNotifier.value),
                       min: -1,
                       max: 1,
                       divisions: 20,
-                      label: widget.controller.contrast.toString(),
+                      label: widget.signals.contrast.value.toString(),
                       onChanged: (value){
-                        widget.controller.updateContrast(value);
+                        widget.signals.contrast.value = value.toString();
+                        //widget.signals.contrast.value = value.toString();
                       }),
                 ],
               ),
@@ -153,9 +148,9 @@ class _SettingsViewState extends State<SettingsView> {
                   widget.controller.updateSeedColor("seed", value);
                 },
                 schemes: [
-                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: widget.controller.contrast)
+                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: double.parse(contrastNotifier.value))
                 ],
               ),
               Divider(),
@@ -167,9 +162,9 @@ class _SettingsViewState extends State<SettingsView> {
                   widget.controller.updateSeedColor("seed", value);
                 },
                 schemes: [
-                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: widget.controller.contrast),
-                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: widget.controller.contrast)
+                  ColorScheme.fromSeed(seedColor: Colors.blue, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.green, contrastLevel: double.parse(contrastNotifier.value)),
+                  ColorScheme.fromSeed(seedColor: Colors.yellow, contrastLevel: double.parse(contrastNotifier.value))
                 ],
               ),
             ],

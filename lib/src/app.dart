@@ -29,28 +29,20 @@ class MyApp extends StatelessWidget {
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
-    TextTheme textTheme = createTextTheme(
-        context, settingsController.bodyLabelFont,
-        settingsController.displayHeadlineFont);
+
     Signal<String> themeMode = settingsService.themeMode;
     Signal<String> fontScale = settingsService.fontScale;
-    ThemeData lightData = ThemeData(textTheme: createTextTheme(
-        context, settingsController.bodyLabelFont,
-        settingsController.displayHeadlineFont),
-        colorScheme: settingsController.colorScheme(Brightness.light));
-    ThemeData darkData = ThemeData(
-        textTheme: textTheme.apply(bodyColor: ColorScheme
-            .fromSeed(seedColor: settingsController.colorSeed.seed,
-            brightness: Brightness.dark)
-            .onSurface),
-        colorScheme: settingsController.colorScheme(Brightness.dark));
+    Signal<String> displayFont = settingsService.displayHeadlineFont;
+    Signal<String> bodyFont = settingsService.bodyLabelFont;
+
     return ListenableBuilder(
       listenable: settingsController,
       builder: (BuildContext context, Widget? child) {
         return Watch.builder(builder: (context) {
-
-          return MediaQuery(data: MediaQuery.of(context).copyWith(
-              textScaler: TextScaler.linear(double.parse(fontScale.value))),//double.parse(settingsService.fontScale.value))),
+          return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.linear(double.parse(fontScale
+                      .value))), //double.parse(settingsService.fontScale.value))),
               child: MaterialApp(
                 // Providing a restorationScopeId allows the Navigator built by the
                 // MaterialApp to restore the navigation stack when a user leaves and
@@ -72,12 +64,22 @@ class MyApp extends StatelessWidget {
                 ],
 
                 onGenerateTitle: (BuildContext context) =>
-                AppLocalizations.of(context)!.appTitle,
+                    AppLocalizations.of(context)!.appTitle,
 
-                theme: lightData,
-                darkTheme: darkData,
+                theme: ThemeData(
+                    textTheme:
+                        createTextTheme(context, bodyFont, displayFont).value,
+                    colorScheme:
+                        settingsController.colorScheme(Brightness.light)),
+                darkTheme: ThemeData(
+                    textTheme: createTextTheme(context, bodyFont, displayFont).value.apply(
+                        bodyColor: ColorScheme.fromSeed(
+                                seedColor: settingsController.colorSeed.seed,
+                                brightness: Brightness.dark)
+                            .onSurface),
+                    colorScheme:
+                        settingsController.colorScheme(Brightness.dark)),
                 themeMode: themeMode.value.toThemeMode(),
-                //settingsService.themeMode.value.toThemeMode(),
                 debugShowCheckedModeBanner: false,
 
                 // Define a function to handle named routes in order to support
@@ -88,8 +90,10 @@ class MyApp extends StatelessWidget {
                     builder: (BuildContext context) {
                       switch (routeSettings.name) {
                         case SettingsView.routeName:
-                          return SettingsView(controller: settingsController,
-                            signals: settingsService,);
+                          return SettingsView(
+                            controller: settingsController,
+                            signals: settingsService,
+                          );
                         case SampleItemDetailsView.routeName:
                           return const SampleItemDetailsView();
                         case SampleItemListView.routeName:

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:signals/signals_flutter.dart';
 
-TextTheme createTextTheme(BuildContext context, String bodyFontString,
-    String displayFontString) {
+SignalValueNotifier<TextTheme> createTextTheme(BuildContext context, Signal<String> bodyFontString,
+    Signal<String> displayFontString) {
   TextTheme baseTextTheme = Theme
       .of(context)
       .textTheme;
   TextTheme bodyTextTheme = GoogleFonts.getTextTheme(
-      bodyFontString, baseTextTheme);
+      bodyFontString.value, baseTextTheme);
   TextTheme displayTextTheme =
-  GoogleFonts.getTextTheme(displayFontString, baseTextTheme);
+  GoogleFonts.getTextTheme(displayFontString.value, baseTextTheme);
   TextTheme textTheme = displayTextTheme.copyWith(
     bodyLarge: bodyTextTheme.bodyLarge,
     bodyMedium: bodyTextTheme.bodyMedium,
@@ -19,8 +20,9 @@ TextTheme createTextTheme(BuildContext context, String bodyFontString,
     labelSmall: bodyTextTheme.labelSmall,
   );
 
-  return textTheme;
+  return SignalValueNotifier(textTheme);
 }
+
 extension ColorUtils on Color {
   String toHex() {
     final rr = (r * 255.0).round().toRadixString(16).padLeft(2, '0');
@@ -31,6 +33,16 @@ extension ColorUtils on Color {
 
   Color onColor() {
     return computeLuminance() > 0.5 ? Colors.black : Colors.white;
+  }
+}
+
+extension ColorIntUtils on int? {
+  Color? toColor() {
+    if (this == null) {
+      return null;
+    } else {
+      return Color(this!.toInt());
+    }
   }
 }
 

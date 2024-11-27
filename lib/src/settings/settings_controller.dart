@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_theme_selector/src/settings/settings_service_old.dart';
 
 import 'constants.dart';
 import 'settings_service.dart';
@@ -18,7 +19,6 @@ class SettingsController with ChangeNotifier {
   // also persisting the changes with the SettingsService.
   late ThemeMode _themeMode;
 
-  late double _contrast;
 
   late String _displayHeadlineFont;
   late String _bodyLabelFont;
@@ -31,14 +31,14 @@ class SettingsController with ChangeNotifier {
 
   // Allow Widgets to read the user's preferred ThemeMode.
   ThemeMode get themeMode => _themeMode;
-  String get displayHeadlineFont => _displayHeadlineFont;
-  String get bodyLabelFont => _bodyLabelFont;
+  //String get displayHeadlineFont => _displayHeadlineFont;
+  //String get bodyLabelFont => _bodyLabelFont;
 
   //double get fontSizeFactor => _fontSizeFactor;
 
   ColorSeed get colorSeed => _colorSeed;
 
-  double get contrast => _contrast;
+  //double get contrast => _contrast;
 
   ColorScheme colorScheme(Brightness brightness) {
     return ColorScheme.fromSeed(seedColor: _colorSeed.seed, brightness: brightness, dynamicSchemeVariant: _variant);
@@ -53,9 +53,9 @@ class SettingsController with ChangeNotifier {
   /// settings from the service.
   Future<void> loadSettings() async {
     //print(_themeMode);
-    _contrast = await _settingsService.contrast();
-    _displayHeadlineFont = await _settingsService.displayHeadlineFont();
-    _bodyLabelFont = await _settingsService.bodyLabelFont();
+    //_contrast = await _settingsService.contrast();
+    //_displayHeadlineFont = await _settingsService.displayHeadlineFont();
+    //_bodyLabelFont = await _settingsService.bodyLabelFont();
     //_fontSizeFactor = await _settingsService.fontSizeFactor();
     _colorSeed = await _settingsService.colorSeed();
     _monochrome = await _settingsService.monochrome();
@@ -92,23 +92,23 @@ class SettingsController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateFonts(String key, String? newValue) async {
-    if (newValue == null) return;
-
-    print(key);
-    if (key == DISPLAY_FONT) {
-      _displayHeadlineFont = newValue;
-      await _settingsService.updateDisplayFont(newValue);
-      notifyListeners();
-    }
-    if (key == BODY_FONT) {
-      _bodyLabelFont = newValue;
-      await _settingsService.updateBodyFont(newValue);
-      notifyListeners();
-    }
-
-    notifyListeners();
-  }
+  // Future<void> updateFonts(String key, String? newValue) async {
+  //   if (newValue == null) return;
+  //
+  //   print(key);
+  //   if (key == DISPLAY_FONT) {
+  //     _displayHeadlineFont = newValue;
+  //     await _settingsService.updateDisplayFont(newValue);
+  //     notifyListeners();
+  //   }
+  //   if (key == BODY_FONT) {
+  //     _bodyLabelFont = newValue;
+  //     await _settingsService.updateBodyFont(newValue);
+  //     notifyListeners();
+  //   }
+  //
+  //   notifyListeners();
+  // }
   Future<void> updateFontSizeFactor(double? newValue) async {
     if (newValue == null) return;
 
@@ -117,13 +117,13 @@ class SettingsController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateContrast(double? newValue) async {
-    if (newValue == null) return;
-
-    _contrast = newValue;
-    await _settingsService.updateContrast(newValue);
-    notifyListeners();
-  }
+  // Future<void> updateContrast(double? newValue) async {
+  //   if (newValue == null) return;
+  //
+  //   _contrast = newValue;
+  //   await _settingsService.updateContrast(newValue);
+  //   notifyListeners();
+  // }
 
   Future<void> updateVariant(String variant, String? newValue) async {
     if (newValue == null) return;

@@ -7,18 +7,25 @@ import '../constants.dart';
 import '../font_constants.dart';
 import '../settings_controller.dart';
 
-class FontSelector extends StatelessWidget {
+class FontSelector extends StatefulWidget{
   final SettingsController controller;
   final SettingsSignalsService service;
 
-  const FontSelector(
+  FontSelector(
       {super.key,
       required this.controller, required this.service});
 
   @override
+  State<FontSelector> createState() => _FontSelectorState();
+}
+
+class _FontSelectorState extends State<FontSelector> {
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final notifier = service.fontScale.toValueNotifier();
+    final notifier = widget.service.fontScale.toValueNotifier();
+
+    final displayFontNotifier = widget.service.displayHeadlineFont;
 
     return Column(
       children: [
@@ -32,10 +39,12 @@ class FontSelector extends StatelessWidget {
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
-                selectedItem: controller.displayHeadlineFont,
+                selectedItem: displayFontNotifier.value,
                 items: googleFontsList,
-                onChanged: (newValue) =>
-                    controller.updateFonts(DISPLAY_FONT, newValue),
+                onChanged: (newValue) {
+                  displayFontNotifier.value = newValue!;
+                }
+                //controller.updateFonts(DISPLAY_FONT, newValue),
               ),
             )
           ],
@@ -53,10 +62,12 @@ class FontSelector extends StatelessWidget {
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
-                selectedItem: controller.bodyLabelFont,
+                selectedItem: widget.service.bodyLabelFont.value,
                 items: googleFontsList,
                 onChanged: (newValue) {
-                    controller.updateFonts(BODY_FONT, newValue);
+                  widget.service.bodyLabelFont.value = newValue!;
+                  notifier.notifyListeners();
+                    //controller.updateFonts(BODY_FONT, newValue);
                 },
               ),
             )
@@ -77,9 +88,9 @@ class FontSelector extends StatelessWidget {
                 min: 1,
                 max: MAX_FONT_SIZE_FACTOR,
                 divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
-                label: service.fontScale.value.toString(),
+                label: widget.service.fontScale.value.toString(),
                 onChanged: (value){
-                  service.fontScale.value = value.toString();
+                  widget.service.fontScale.value = value.toString();
                   //controller.updateFontSizeFactor(value);
                 }),
           ],
