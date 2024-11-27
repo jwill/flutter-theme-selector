@@ -23,9 +23,6 @@ class _FontSelectorState extends State<FontSelector> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final notifier = widget.service.fontScale.toValueNotifier();
-
-    final displayFontNotifier = widget.service.displayHeadlineFont;
 
     return Column(
       children: [
@@ -39,10 +36,10 @@ class _FontSelectorState extends State<FontSelector> {
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
-                selectedItem: displayFontNotifier.value,
+                selectedItem: widget.service.displayHeadlineFont.value,
                 items: googleFontsList,
                 onChanged: (newValue) {
-                  displayFontNotifier.value = newValue!;
+                  widget.service.displayHeadlineFont.value = newValue!;
                 }
                 //controller.updateFonts(DISPLAY_FONT, newValue),
               ),
@@ -66,8 +63,6 @@ class _FontSelectorState extends State<FontSelector> {
                 items: googleFontsList,
                 onChanged: (newValue) {
                   widget.service.bodyLabelFont.value = newValue!;
-                  notifier.notifyListeners();
-                    //controller.updateFonts(BODY_FONT, newValue);
                 },
               ),
             )
@@ -84,14 +79,13 @@ class _FontSelectorState extends State<FontSelector> {
             ),
             Spacer(),
             Slider(
-                value: double.parse(notifier.value),
+                value: double.parse(widget.service.fontScale.value),
                 min: 1,
                 max: MAX_FONT_SIZE_FACTOR,
                 divisions: MAX_FONT_SIZE_FACTOR.toInt() * 10,
                 label: widget.service.fontScale.value.toString(),
                 onChanged: (value){
                   widget.service.fontScale.value = value.toString();
-                  //controller.updateFontSizeFactor(value);
                 }),
           ],
         )
