@@ -1,17 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_selector/src/settings/font_constants.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/font_selector.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
-import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
 import 'package:flutter_theme_selector/src/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
-
-import 'constants.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
@@ -23,7 +17,6 @@ class SettingsView extends StatefulWidget {
   static const routeName = '/settings';
 
   final SettingsSignalsService signals;
-  //var fontSizeFactor = 0.0;
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
@@ -42,10 +35,6 @@ class _SettingsViewState extends State<SettingsView> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(16),
-          // Glue the SettingsController to the theme selection DropdownButton.
-          //
-          // When a user selects a theme from the dropdown list, the
-          // SettingsController is updated, which rebuilds the MaterialApp.
           child: Column(
             children: [
               Row(
@@ -56,9 +45,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                   Spacer(),
                   DropdownButton<String>(
-                    // Read the selected themeMode from the controller
                     value: widget.signals.themeMode.value,
-                    // Call the updateThemeMode method any time the user selects a theme.
                     onChanged: (v) => widget.signals.themeMode.value = v!,
                     items: const [
                       DropdownMenuItem(
@@ -115,7 +102,6 @@ class _SettingsViewState extends State<SettingsView> {
                         onChanged: (newValue) {
                           setState(() {
                             widget.signals.variant.value = newValue!;
-                            //widget.controller.updateSeedColor(COLOR_SEED, widget.controller.colorSeed.seed.value);
                           });
                         }))
               ]),
@@ -134,7 +120,6 @@ class _SettingsViewState extends State<SettingsView> {
                       label: widget.signals.contrast.value.toString(),
                       onChanged: (value){
                         widget.signals.contrast.value = value.toString();
-                        //widget.signals.contrast.value = value.toString();
                       }),
                 ],
               ),
@@ -143,7 +128,6 @@ class _SettingsViewState extends State<SettingsView> {
                 onTap: (String value) {
                   //TODO make a function that allows passing the whole scheme in case we have
                   // constructed schemes that don't just use a seed color
-                  //widget.controller.updateSeedColor("seed", value);
                   widget.signals.seed.value = value;
                 },
                 schemes: [
