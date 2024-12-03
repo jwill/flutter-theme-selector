@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
-import 'package:flutter_theme_selector/src/utils.dart';
 import 'package:signals/signals_flutter.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
 
-    ReadonlySignal<String> themeMode = settingsService.themeMode;
+    ReadonlySignal<ThemeMode> themeMode = settingsService.themeMode;
     ReadonlySignal<String> fontScale = settingsService.fontScale;
 
     return Watch.builder(builder: (context) {
@@ -58,7 +57,7 @@ class MyApp extends StatelessWidget {
 
             theme: settingsService.lightTheme.value,
             darkTheme: settingsService.darkTheme.value,
-            themeMode: themeMode.value.toThemeMode(),
+            themeMode: themeMode.value,
             debugShowCheckedModeBanner: false,
             builder: (context, child) {
               return Watch((context) {

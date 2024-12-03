@@ -41,20 +41,20 @@ class _SettingsViewState extends State<SettingsView> {
                   style: textTheme.bodyLarge,
                 ),
                 Spacer(),
-                DropdownButton<String>(
+                DropdownButton<ThemeMode>(
                   value: widget.signals.themeMode.value,
                   onChanged: (v) => widget.signals.themeMode.value = v!,
                   items: const [
                     DropdownMenuItem(
-                      value: "system",
+                      value: ThemeMode.system,
                       child: Text('System Theme'),
                     ),
                     DropdownMenuItem(
-                      value: "light",
+                      value: ThemeMode.light,
                       child: Text('Light Theme'),
                     ),
                     DropdownMenuItem(
-                      value: "dark",
+                      value: ThemeMode.dark,
                       child: Text('Dark Theme'),
                     )
                   ],
@@ -94,11 +94,9 @@ class _SettingsViewState extends State<SettingsView> {
               Spacer(),
               ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 200),
-                  child: DropdownSearch<String>(
+                  child: DropdownSearch<DynamicSchemeVariant>(
                       selectedItem: widget.signals.variant.value,
-                      items: (_, __) => DynamicSchemeVariant.values.map((v) {
-                            return v.name;
-                          }).toList(),
+                      items: (_, __) => DynamicSchemeVariant.values,
                       onChanged: (newValue) {
                         setState(() {
                           widget.signals.variant.value = newValue!;

@@ -92,6 +92,23 @@ mixin PersistedSignalMixin<T, KV extends KeyValueStore> on Signal<T> {
   String encode(T value) => jsonEncode(value);
 }
 
+class EnumSignal<T extends Enum>
+    extends PersistedSignal<T, SharedPreferencesStore> {
+  EnumSignal(super.val, String key, this.values, SharedPreferencesStore store)
+      : super(
+          key: key,
+          store: store,
+        );
+
+  final List<T> values;
+
+  @override
+  T decode(String value) => values.firstWhere((e) => e.name == value);
+
+  @override
+  String encode(T value) => value.name;
+}
+
 class SettingsSignal extends PersistedSignal<String, SharedPreferencesStore> {
   SettingsSignal(super.val, String key, SharedPreferencesStore store)
       : super(

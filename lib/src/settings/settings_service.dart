@@ -21,9 +21,10 @@ class SettingsSignalsService {
   late final store = SharedPreferencesStore(prefs);
 
   // second value is default
-  late final themeMode = SettingsSignal(
-    'system',
+  late final themeMode = EnumSignal(
+    ThemeMode.system,
     THEME_MODE,
+    ThemeMode.values,
     store,
   );
   late final seed = SettingsSignal(
@@ -51,9 +52,10 @@ class SettingsSignalsService {
     BODY_FONT,
     store,
   );
-  late final variant = SettingsSignal(
-    "tonalSpot",
+  late final variant = EnumSignal(
+    DynamicSchemeVariant.tonalSpot,
     VARIANT,
+    DynamicSchemeVariant.values,
     store,
   );
   // Signal<ColorSeed> get colorSeed {
@@ -98,13 +100,6 @@ class SettingsSignalsService {
     );
   });
 
-  late final schemeVariant = computed(() {
-    return DynamicSchemeVariant.values.firstWhere(
-      (elem) => elem.name == variant.value,
-      orElse: () => DynamicSchemeVariant.tonalSpot,
-    );
-  });
-
   late final seedColor = computed(() {
     return int.parse(seed.value).toColor()!;
   });
@@ -113,7 +108,7 @@ class SettingsSignalsService {
     return ColorScheme.fromSeed(
       seedColor: seedColor.value,
       brightness: Brightness.light,
-      dynamicSchemeVariant: schemeVariant.value,
+      dynamicSchemeVariant: variant.value,
     );
   });
 
@@ -121,7 +116,7 @@ class SettingsSignalsService {
     return ColorScheme.fromSeed(
       seedColor: seedColor.value,
       brightness: Brightness.dark,
-      dynamicSchemeVariant: schemeVariant.value,
+      dynamicSchemeVariant: variant.value,
     );
   });
 
@@ -144,18 +139,4 @@ class SettingsSignalsService {
       colorScheme: darkColorScheme.value,
     );
   });
-}
-
-extension Converters on String {
-  ThemeMode toThemeMode() {
-    switch (this) {
-      case 'system':
-        return ThemeMode.system;
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-    }
-    return ThemeMode.system;
-  }
 }
