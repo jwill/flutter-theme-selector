@@ -1,44 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:signals/signals_flutter.dart';
-
-FlutterSignal<TextTheme> createTextTheme(
-  BuildContext context,
-  Signal<String> bodyFontString,
-  Signal<String> displayFontString,
-) {
-  TextTheme baseTextTheme = Theme.of(context).textTheme;
-  TextTheme bodyTextTheme =
-      GoogleFonts.getTextTheme(bodyFontString.value, baseTextTheme);
-  TextTheme displayTextTheme =
-      GoogleFonts.getTextTheme(displayFontString.value, baseTextTheme);
-  TextTheme textTheme = displayTextTheme.copyWith(
-    bodyLarge: bodyTextTheme.bodyLarge,
-    bodyMedium: bodyTextTheme.bodyMedium,
-    bodySmall: bodyTextTheme.bodySmall,
-    labelLarge: bodyTextTheme.labelLarge,
-    labelMedium: bodyTextTheme.labelMedium,
-    labelSmall: bodyTextTheme.labelSmall,
-  );
-
-  return signal(textTheme);
-}
-
-FlutterSignal<ColorScheme> colorScheme(
-  Brightness brightness,
-  Signal<String> seed,
-  Signal<String> variant,
-) {
-  return signal(
-    ColorScheme.fromSeed(
-      seedColor: int.parse(seed.value).toColor()!,
-      brightness: brightness,
-      dynamicSchemeVariant: DynamicSchemeVariant.values.firstWhere(
-          (elem) => elem.name == variant.value,
-          orElse: () => DynamicSchemeVariant.tonalSpot),
-    ),
-  );
-}
 
 extension ColorUtils on Color {
   String toHex() {

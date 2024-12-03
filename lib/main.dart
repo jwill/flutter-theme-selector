@@ -8,7 +8,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Set up the SettingsController, which will glue user settings to multiple
   // Flutter Widgets.
-  final SharedPreferencesWithCache prefs = await SharedPreferencesWithCache.create(cacheOptions: SharedPreferencesWithCacheOptions());
+  final prefs = await SharedPreferencesWithCache.create(
+    cacheOptions: SharedPreferencesWithCacheOptions(),
+  );
   final settingsService = SettingsSignalsService(prefs);
 
   // Load the user's preferred theme while the splash screen is displayed.
@@ -18,5 +20,7 @@ void main() async {
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
 
-  runApp(MyApp(settingsService: settingsService,));
+  runApp(MyApp(
+    settingsService: settingsService,
+  ));
 }
