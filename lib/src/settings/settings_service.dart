@@ -100,6 +100,20 @@ class SettingsSignalsService {
     );
   });
 
+  late final lightTextTheme = computed(() {
+    return textTheme.value.apply(
+      bodyColor: lightColorScheme.value.onSurface,
+      displayColor: lightColorScheme.value.onSurface,
+    );
+  });
+
+  late final darkTextTheme = computed(() {
+    return textTheme.value.apply(
+      bodyColor: darkColorScheme.value.onSurface,
+      displayColor: darkColorScheme.value.onSurface,
+    );
+  });
+
   late final seedColor = computed(() {
     return int.parse(seed.value).toColor()!;
   });
@@ -122,21 +136,17 @@ class SettingsSignalsService {
 
   late final lightTheme = computed(() {
     return ThemeData(
-      textTheme: textTheme.value.apply(
-        bodyColor: lightColorScheme.value.onSurface,
-        displayColor: lightColorScheme.value.onSurface,
-      ),
+      textTheme: lightTextTheme.value,
       colorScheme: lightColorScheme.value,
+      brightness: Brightness.light,
     );
   });
 
   late final darkTheme = computed(() {
     return ThemeData(
-      textTheme: textTheme.value.apply(
-        bodyColor: darkColorScheme.value.onSurface,
-        displayColor: darkColorScheme.value.onSurface,
-      ),
+      textTheme: darkTextTheme.value,
       colorScheme: darkColorScheme.value,
+      brightness: Brightness.dark,
     );
   });
 }
