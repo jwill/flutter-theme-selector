@@ -76,13 +76,12 @@ class _SettingsViewState extends State<SettingsView> {
               height: 16,
             ),
             ColorField(
-                color: int.parse(widget.signals.seed.value).toColor()!,
-                title: "Seed Color",
-                onChanged: (color) {
-                  setState(() {
-                    widget.signals.seed.value = color.value.toString();
-                  });
-                }),
+              color: int.parse(widget.signals.seed.value).toColor()!,
+              title: "Seed Color",
+              onChanged: (color) {
+                widget.signals.seed.value = color.value.toString();
+              },
+            ),
             SizedBox(
               height: 16,
             ),
@@ -94,14 +93,15 @@ class _SettingsViewState extends State<SettingsView> {
               Spacer(),
               ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 200),
-                  child: DropdownSearch<DynamicSchemeVariant>(
-                      selectedItem: widget.signals.variant.value,
-                      items: (_, __) => DynamicSchemeVariant.values,
-                      onChanged: (newValue) {
-                        setState(() {
-                          widget.signals.variant.value = newValue!;
-                        });
-                      }))
+                  child: DropdownSearch<String>(
+                    selectedItem: widget.signals.variant.value.name,
+                    items: (_, __) =>
+                        DynamicSchemeVariant.values.map((e) => e.name).toList(),
+                    onChanged: (newValue) {
+                      widget.signals.variant.value = DynamicSchemeVariant.values
+                          .firstWhere((e) => e.name == newValue);
+                    },
+                  ))
             ]),
             Row(
               children: [
