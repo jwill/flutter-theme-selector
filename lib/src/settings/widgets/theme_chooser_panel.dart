@@ -1,7 +1,7 @@
 // Takes in a set of Color Seeds
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_selector/src/settings/widgets/themeable_pie.dart';
-import 'package:flutter_theme_selector/src/utils.dart';
+
+import 'themeable_pie.dart';
 
 class ThemeChooserPanel extends StatefulWidget {
   final List<ColorScheme> schemes;

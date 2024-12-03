@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 String DEFAULT_COLOR = "4285420171";
@@ -17,8 +19,8 @@ String COLOR_NEUTRAL_SEED = "colorNeutralSeed";
 String COLOR_NV_SEED = "colorNeutralVariantSeed";
 String COLOR_ERROR_SEED = "colorErrorSeed";
 String MONOCHROME = "isMonochrome";
-String VARIANT = "variant";
-String THEME_MODE = "themeMode";
+String VARIANT = "scheme-variant";
+String THEME_MODE = "theme-mode";
 String CONTRAST_VALUE = "contrast";
 
 class ColorSeed extends SimpleColorSeed {

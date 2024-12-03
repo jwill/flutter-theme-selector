@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
-import 'package:flutter_theme_selector/src/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
@@ -26,12 +24,8 @@ class MyApp extends StatelessWidget {
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
 
-    Signal<String> themeMode = settingsService.themeMode;
-    Signal<String> fontScale = settingsService.fontScale;
-    Signal<String> displayFont = settingsService.displayHeadlineFont;
-    Signal<String> bodyFont = settingsService.bodyLabelFont;
-    Signal<String> seed = settingsService.seed;
-    Signal<String> variant = settingsService.variant;
+    ReadonlySignal<ThemeMode> themeMode = settingsService.themeMode;
+    ReadonlySignal<String> fontScale = settingsService.fontScale;
 
     return Watch.builder(builder: (context) {
       return MediaQuery(
@@ -59,27 +53,18 @@ class MyApp extends StatelessWidget {
             ],
 
             onGenerateTitle: (BuildContext context) =>
-            AppLocalizations.of(context)!.appTitle,
+                AppLocalizations.of(context)!.appTitle,
 
-            theme: ThemeData(
-                textTheme:
-                createTextTheme(context, bodyFont, displayFont).value,
-                //TODO
-                colorScheme:
-                colorScheme(Brightness.light, seed, variant).value),
-            darkTheme: ThemeData(
-                textTheme: createTextTheme(context, bodyFont, displayFont).value
-                    .apply(
-                    bodyColor: ColorScheme
-                        .fromSeed(
-                        seedColor: int.parse(seed.value).toColor()!,
-                        brightness: Brightness.dark)
-                        .onSurface),
-                colorScheme:
-                colorScheme(Brightness.dark, seed, variant).value),
-            themeMode: themeMode.value.toThemeMode(),
+            theme: settingsService.lightTheme.value,
+            darkTheme: settingsService.darkTheme.value,
+            themeMode: themeMode.value,
             debugShowCheckedModeBanner: false,
-
+            builder: (context, child) {
+              return Watch((context) {
+                settingsService.theme.value = Theme.of(context);
+                return child!;
+              });
+            },
             // Define a function to handle named routes in order to support
             // Flutter web url navigation and deep linking.
             onGenerateRoute: (RouteSettings routeSettings) {

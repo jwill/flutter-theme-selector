@@ -1,8 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_theme_selector/src/settings/settings_service.dart';
-import 'package:signals/signals_flutter.dart';
 
+import '../settings_service.dart';
 import '../constants.dart';
 import '../font_constants.dart';
 
@@ -36,7 +35,7 @@ class _FontSelectorState extends State<FontSelector> {
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
                 selectedItem: widget.service.displayHeadlineFont.value,
-                items: widget.fontList,
+                items: (_, __) => widget.fontList,
                 onChanged: (newValue) {
                   widget.service.displayHeadlineFont.value = newValue!;
                 }
@@ -59,7 +58,7 @@ class _FontSelectorState extends State<FontSelector> {
               constraints: BoxConstraints(maxWidth: 200),
               child: DropdownSearch<String>(
                 selectedItem: widget.service.bodyLabelFont.value,
-                items: widget.fontList,
+                 items: (_, __) => widget.fontList,
                 onChanged: (newValue) {
                   widget.service.bodyLabelFont.value = newValue!;
                 },

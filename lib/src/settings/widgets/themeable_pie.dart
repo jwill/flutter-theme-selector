@@ -9,7 +9,7 @@ class ThemeablePieWidget extends StatelessWidget {
   final ColorScheme scheme;
   final bool isSelected;
   // To display only a single color (like M2 ColorScheme)
-  bool isSingleColor;
+ final  bool isSingleColor;
 
   @override
   Widget build(BuildContext context) {

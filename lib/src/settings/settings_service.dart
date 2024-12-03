@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_selector/src/settings/constants.dart';
 import 'package:flutter_theme_selector/src/utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:signals/signals.dart';
+import 'package:signals/signals_flutter.dart';
+
+import 'settings_store.dart';
 
 /// A service that stores and retrieves user settings.
 ///
@@ -13,33 +16,48 @@ import 'package:signals/signals.dart';
 class SettingsSignalsService {
   /// Loads the User's preferred ThemeMode from local or remote storage.
   final SharedPreferencesWithCache prefs;
+  SettingsSignalsService(this.prefs);
 
-  EffectCleanup? _cleanup;
-  SettingsSignalsService(this.prefs) {
-    _cleanup = effect(() {
-      for (final entry in setting.store.entries) {
-        final value = entry.value.peek();
-        if (prefs.getString(entry.key.$1) != value) {
-          prefs.setString(entry.key.$1, value).ignore();
-        }
-      }
-    });
-  }
-
-  late final setting = signalContainer<String, (String, String)>(
-        (val) => signal(prefs.getString(val.$1) ?? val.$2),
-    cache: true,
-  );
+  late final store = SharedPreferencesStore(prefs);
 
   // second value is default
-  Signal<String> get themeMode => setting((THEME_MODE, 'system'));
-  Signal<String> get seed => setting((COLOR_SEED, DEFAULT_COLOR));
-  Signal<String> get fontScale => setting((FONT_SIZE_FACTOR, "1.0"));
-  Signal<String> get contrast => setting((CONTRAST_VALUE, DEFAULT_CONTRAST));
-  Signal<String> get displayHeadlineFont => setting((DISPLAY_FONT, "Noto Sans"));
-  Signal<String> get bodyLabelFont => setting((BODY_FONT, "Noto Sans"));
-  Signal<String> get variant => setting((VARIANT, "tonalSpot")); //TODO
-
+  late final themeMode = EnumSignal(
+    ThemeMode.system,
+    THEME_MODE,
+    ThemeMode.values,
+    store,
+  );
+  late final seed = SettingsSignal(
+    DEFAULT_COLOR,
+    COLOR_SEED,
+    store,
+  );
+  late final fontScale = SettingsSignal(
+    "1.0",
+    FONT_SIZE_FACTOR,
+    store,
+  );
+  late final contrast = SettingsSignal(
+    DEFAULT_CONTRAST,
+    CONTRAST_VALUE,
+    store,
+  );
+  late final displayHeadlineFont = SettingsSignal(
+    "Noto Sans",
+    DISPLAY_FONT,
+    store,
+  );
+  late final bodyLabelFont = SettingsSignal(
+    "Noto Sans",
+    BODY_FONT,
+    store,
+  );
+  late final variant = EnumSignal(
+    DynamicSchemeVariant.tonalSpot,
+    VARIANT,
+    DynamicSchemeVariant.values,
+    store,
+  );
   // Signal<ColorSeed> get colorSeed {
   //
   //   Color? secondarySeed = (await prefs.getInt(COLOR_SECONDARY_SEED)).toColor();
@@ -49,32 +67,86 @@ class SettingsSignalsService {
   //   Color? errorSeed = (await prefs.getInt(COLOR_ERROR_SEED)).toColor();
   // }
 
-  void dispose() {
-      _cleanup?.call();
-      setting.dispose();
+  void dispose() {}
+
+  bool monochrome() {
+    bool? isMonochrome = prefs.getBool(MONOCHROME);
+    if (isMonochrome == null) {
+      return false;
+    } else {
+      return isMonochrome;
     }
-
-
-    Future <bool> monochrome() async {
-      bool? isMonochrome = await prefs.getBool(MONOCHROME);
-      if (isMonochrome == null) {
-        return false;
-      } else
-        return isMonochrome;
-    }
-
   }
 
-extension Converters on String {
-  ThemeMode toThemeMode() {
-    switch(this) {
-      case 'system':
-        return ThemeMode.system;
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-    }
-    return ThemeMode.system;
-  }
+  final theme = signal<ThemeData>(ThemeData.light());
+
+  late final textTheme = computed(() {
+    TextTheme baseTextTheme = theme.value.textTheme;
+    TextTheme bodyTextTheme = GoogleFonts.getTextTheme(
+      bodyLabelFont.value,
+      baseTextTheme,
+    );
+    TextTheme displayTextTheme = GoogleFonts.getTextTheme(
+      displayHeadlineFont.value,
+      baseTextTheme,
+    );
+    return displayTextTheme.copyWith(
+      bodyLarge: bodyTextTheme.bodyLarge,
+      bodyMedium: bodyTextTheme.bodyMedium,
+      bodySmall: bodyTextTheme.bodySmall,
+      labelLarge: bodyTextTheme.labelLarge,
+      labelMedium: bodyTextTheme.labelMedium,
+      labelSmall: bodyTextTheme.labelSmall,
+    );
+  });
+
+  late final lightTextTheme = computed(() {
+    return textTheme.value.apply(
+      bodyColor: lightColorScheme.value.onSurface,
+      displayColor: lightColorScheme.value.onSurface,
+    );
+  });
+
+  late final darkTextTheme = computed(() {
+    return textTheme.value.apply(
+      bodyColor: darkColorScheme.value.onSurface,
+      displayColor: darkColorScheme.value.onSurface,
+    );
+  });
+
+  late final seedColor = computed(() {
+    return int.parse(seed.value).toColor()!;
+  });
+
+  late final lightColorScheme = computed(() {
+    return ColorScheme.fromSeed(
+      seedColor: seedColor.value,
+      brightness: Brightness.light,
+      dynamicSchemeVariant: variant.value,
+    );
+  });
+
+  late final darkColorScheme = computed(() {
+    return ColorScheme.fromSeed(
+      seedColor: seedColor.value,
+      brightness: Brightness.dark,
+      dynamicSchemeVariant: variant.value,
+    );
+  });
+
+  late final lightTheme = computed(() {
+    return ThemeData(
+      textTheme: lightTextTheme.value,
+      colorScheme: lightColorScheme.value,
+      brightness: Brightness.light,
+    );
+  });
+
+  late final darkTheme = computed(() {
+    return ThemeData(
+      textTheme: darkTextTheme.value,
+      colorScheme: darkColorScheme.value,
+      brightness: Brightness.dark,
+    );
+  });
 }
