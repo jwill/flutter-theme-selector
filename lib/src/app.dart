@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_theme_selector/src/settings/settings_service.dart';
 import 'package:flutter_theme_selector/src/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals_flutter.dart';
 
 import 'sample_feature/sample_item_details_view.dart';

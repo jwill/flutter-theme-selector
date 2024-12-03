@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:signals/signals_flutter.dart';
 
-SignalValueNotifier<TextTheme> createTextTheme(BuildContext context, Signal<String> bodyFontString,
-    Signal<String> displayFontString) {
-  TextTheme baseTextTheme = Theme
-      .of(context)
-      .textTheme;
-  TextTheme bodyTextTheme = GoogleFonts.getTextTheme(
-      bodyFontString.value, baseTextTheme);
+FlutterSignal<TextTheme> createTextTheme(
+  BuildContext context,
+  Signal<String> bodyFontString,
+  Signal<String> displayFontString,
+) {
+  TextTheme baseTextTheme = Theme.of(context).textTheme;
+  TextTheme bodyTextTheme =
+      GoogleFonts.getTextTheme(bodyFontString.value, baseTextTheme);
   TextTheme displayTextTheme =
-  GoogleFonts.getTextTheme(displayFontString.value, baseTextTheme);
+      GoogleFonts.getTextTheme(displayFontString.value, baseTextTheme);
   TextTheme textTheme = displayTextTheme.copyWith(
     bodyLarge: bodyTextTheme.bodyLarge,
     bodyMedium: bodyTextTheme.bodyMedium,
@@ -20,13 +21,23 @@ SignalValueNotifier<TextTheme> createTextTheme(BuildContext context, Signal<Stri
     labelSmall: bodyTextTheme.labelSmall,
   );
 
-  return SignalValueNotifier(textTheme);
+  return signal(textTheme);
 }
 
-SignalValueNotifier<ColorScheme> colorScheme(Brightness brightness, Signal<String> seed, Signal<String> variant) {
-
-  return SignalValueNotifier(ColorScheme.fromSeed(seedColor: int.parse(seed.value).toColor()!,
-      brightness: brightness, dynamicSchemeVariant: DynamicSchemeVariant.values.firstWhere((elem) => elem.name == variant.value, orElse: ()=> DynamicSchemeVariant.tonalSpot)));
+FlutterSignal<ColorScheme> colorScheme(
+  Brightness brightness,
+  Signal<String> seed,
+  Signal<String> variant,
+) {
+  return signal(
+    ColorScheme.fromSeed(
+      seedColor: int.parse(seed.value).toColor()!,
+      brightness: brightness,
+      dynamicSchemeVariant: DynamicSchemeVariant.values.firstWhere(
+          (elem) => elem.name == variant.value,
+          orElse: () => DynamicSchemeVariant.tonalSpot),
+    ),
+  );
 }
 
 extension ColorUtils on Color {

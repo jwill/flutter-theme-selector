@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_theme_selector/src/settings/constants.dart';
-import 'package:flutter_theme_selector/src/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signals/signals.dart';
 

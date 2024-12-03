@@ -5,7 +5,6 @@ import 'package:flutter_theme_selector/src/settings/widgets/color_field.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/font_selector.dart';
 import 'package:flutter_theme_selector/src/settings/widgets/theme_chooser_panel.dart';
 import 'package:flutter_theme_selector/src/utils.dart';
-import 'package:signals/signals_flutter.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
@@ -27,7 +26,7 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final contrastNotifier = widget.signals.contrast.toValueNotifier();
+    final contrastNotifier = widget.signals.contrast;
 
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +95,7 @@ class _SettingsViewState extends State<SettingsView> {
                     constraints: BoxConstraints(maxWidth: 200),
                     child: DropdownSearch<String>(
                         selectedItem: widget.signals.variant.value,
-                        items: DynamicSchemeVariant.values.map((v) {
+                        items: (_, __) =>  DynamicSchemeVariant.values.map((v) {
                           return v.name;
                         }).toList(),
                         onChanged: (newValue) {
